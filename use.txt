@@ -1,0 +1,21 @@
+in ididentifier 
+private Weakrefenrence<SymboleTableEntry> symbolTablePointer = null
+
+use assertion
+assert(token != null)
+
+
+LExer interface : character to next character LExer 
+getnexttoken (while not finish)
+check if (PRINT, =,..)
+
+
+
+
+Class scanner to read the file with reader
+
+public char peak
+public char get 
+if(\n) change line and collum
+
+if the new character is white space we 
