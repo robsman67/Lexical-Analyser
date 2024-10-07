@@ -8,6 +8,6 @@ public class ReservedWordToken extends Token {
 
     @Override
     public String getTokenType() {
-        return "ReservedWord";
+        return "";
     }
 }

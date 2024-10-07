@@ -18,6 +18,9 @@ public abstract class Token implements Comparable<Token> {
     // Method to print the token information
     @Override
     public String toString() {
+        if(getTokenType().equals("")) {
+            return "<" + lexeme + ">";
+        }
         return "<" + getTokenType() + ", " + lexeme + ">";
     }
 

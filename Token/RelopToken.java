@@ -7,6 +7,6 @@ public class RelopToken extends Token {
 
     @Override
     public String getTokenType() {
-        return "RELOP";
+        return "";
     }
 }

@@ -1,31 +1,47 @@
 import java.io.IOException;
-import java.io.StringReader;
+
+import Lexer.Lexer;
 import Scanner.Scanner;
+import SymbolTable.SymbolTable;
+import Token.Token;
 
-public class Main {    public static void main(String[] args) throws IOException {
-        String sourceCode = 
-            "5 LET RE = 0\n" +
-            "10 INPUT NUM\n" +
-            "20 REM This is a comment\n" +
-            "25 REM\n" +
-            "30 IF N <= 0 THEN GOTO 99\n";
+import java.io.FileReader;
 
-        Scanner scanner = new Scanner(new StringReader(sourceCode));
 
-        // Example: Read through the characters and print them
-        while (scanner.hasMoreCharacters()) {
+public class Main {
+    public static void main(String[] args) {
+        /*if (args.length == 0) {
+            System.out.println("Please provide a .tb input file.");
+            return;
+        }
 
-            char currentCharCheck = scanner.peek();
+        String inputFile = args[0];
+*/
 
-            //scanner.skipWhiteSpaces(); // Skip over any whitespace first
+        String inputFile = "test1.tb";
+        try {
+            // Create the Scanner for the .tb input file
+            FileReader fileReader = new FileReader(inputFile);
+            Scanner scanner = new Scanner(fileReader);
 
-            if(currentCharCheck == 'R'){
-                scanner.skipComment();      // Skip comments if found
+            // Create the Lexer
+            Lexer lexer = new Lexer(scanner);
+
+            // Create a Symbol Table (optional for now)
+            SymbolTable symbolTable = new SymbolTable();
+
+            // Retrieve tokens and display them
+            Token token;
+            while ((token = lexer.getNextToken()) != null) {
+                // Print the token to the console
+                System.out.println(token);
             }
-            char currentChar = scanner.get();
 
-            // Peek the next characters to detect comments
-            System.out.print(currentChar);
+            // Close the file reader
+            fileReader.close();
+        } catch (IOException e) {
+            System.err.println("Error reading the input file: " + e.getMessage());
         }
     }
 }
+
