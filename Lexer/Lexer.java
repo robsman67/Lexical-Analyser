@@ -15,9 +15,11 @@ public class Lexer {
     public Token getNextToken() throws IOException {
         scanner.skipWhiteSpaces();
         //System.out.println(scanner.peek());
-        if(scanner.peek() == '\n') {
+        if(scanner.peek() == '\n'){
             scanner.get();
         }
+
+        scanner.skipWhiteSpaces();
         //scanner.skipComment();
 
         if (!scanner.hasMoreCharacters()) {
@@ -50,6 +52,10 @@ public class Lexer {
         if (currentChar == '=') {
             scanner.get(); // Consume '='
             return new OpToken("=");
+        }
+
+        if (currentChar == '"'){
+            return recognizeQuote();
         }
 
         // Unrecognized token, consume and return an error or handle it accordingly
@@ -87,12 +93,39 @@ public class Lexer {
 
         // Check if the lexeme is a reserved word
         if (isReservedWord(lexeme)) {
+            //Skip the rest of the line of the comment
+            if(lexeme.equals("REM")){
+                while(scanner.peek() != '\n'){
+                    scanner.get();
+                }
+                return new CommentToken("REM");                    
+            }
             return new ReservedWordToken(lexeme);
         }
 
         // Otherwise, it's an identifier (ID)
         return new IdToken(lexeme, null); // Pass null for the symbol table entry for now
     }
+
+    // method to recognize quoted strings
+    private Token recognizeQuote() throws IOException {
+        StringBuilder quoteBuilder = new StringBuilder();
+        scanner.get(); // Consume the quote
+        char currentChar = scanner.peek();
+
+        // Continue reading until the closing quote or new line (we don't verify the closing quote for now)
+        while (currentChar != '"' && currentChar != '\n') {
+            quoteBuilder.append(currentChar);
+            scanner.get(); // Consume the character
+            currentChar = scanner.peek();
+        }
+        
+        scanner.get(); // Consume the quote or new line
+
+        return new StringToken(quoteBuilder.toString());
+
+    }
+
 
     // Helper method to recognize relational operators (RELOP)
     private Token recognizeRelop() throws IOException {
@@ -111,6 +144,7 @@ public class Lexer {
 
         return new RelopToken(relopBuilder.toString());
     }
+
 
     // Helper method to recognize arithmetic operators (OP)
     private Token recognizeOperator() throws IOException {

@@ -18,7 +18,7 @@ public class Main {
         String inputFile = args[0];
 */
 
-        String inputFile = "test1.tb";
+        String inputFile = "Test/test1.tb";
         try {
             // Create the Scanner for the .tb input file
             FileReader fileReader = new FileReader(inputFile);
@@ -32,9 +32,12 @@ public class Main {
 
             // Retrieve tokens and display them
             Token token;
+            
             while ((token = lexer.getNextToken()) != null) {
+                if(!token.getTokenType().equals("REM")){
+                    System.out.println(token);
+                }
                 // Print the token to the console
-                System.out.println(token);
             }
 
             // Close the file reader
