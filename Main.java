@@ -34,10 +34,21 @@ public class Main {
             Token token;
             
             while ((token = lexer.getNextToken()) != null) {
+                
+                //Don't print REM tokens
                 if(!token.getTokenType().equals("REM")){
-                    System.out.println(token);
+                    if(token.getTokenType().equals("ID")){
+                        symbolTable.addEntry(token, lexer.getCurrentLine());
+                    }
+                    //Print line by line
+                    if(token.getTokenType().equals("EOL")){
+                        System.out.println();
+                    }else{
+                        // Print the token to the console
+                        System.out.print(token + " ");
+                    }
                 }
-                // Print the token to the console
+                
             }
 
             // Close the file reader
@@ -45,6 +56,7 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Error reading the input file: " + e.getMessage());
         }
+
     }
 }
 

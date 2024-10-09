@@ -16,10 +16,10 @@ public class SymbolTable {
     }
 
     // Method to add a new entry for a regular token
-    public void addEntry(Token token, int line, int column) {
+    public void addEntry(Token token, int line) {
         // Check if the token is already in the symbol table
         if (!symbolTable.containsKey(token)) {
-            SymbolTableEntry entry = new SymbolTableEntry(token, line, column);
+            SymbolTableEntry entry = new SymbolTableEntry(token, line);
             symbolTable.put(token, entry);
         }
     }
@@ -43,8 +43,7 @@ public class SymbolTable {
         for (Token token : symbolTable.keySet()) {
             SymbolTableEntry entry = symbolTable.get(token);
             System.out.println("Token: " + token.toString() + ", Line: " 
-                + entry.getFirstOccurrenceLine() + ", Column: " 
-                + entry.getFirstOccurrenceColumn());
+                + entry.getFirstOccurrenceLine());
         }
     }
 }

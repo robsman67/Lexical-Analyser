@@ -1,11 +1,14 @@
 package Lexer;
 
 import Scanner.Scanner;
+import SymbolTable.SymbolTableEntry;
 import Token.*;
 import java.io.IOException;
 
 public class Lexer {
     private Scanner scanner;
+    // Track the currentLine for error and symbole table
+    private int currentLine = 1;
     
     public Lexer(Scanner scanner) {
         this.scanner = scanner;
@@ -13,14 +16,15 @@ public class Lexer {
 
     // Method to recognize the next token
     public Token getNextToken() throws IOException {
-        scanner.skipWhiteSpaces();
-        //System.out.println(scanner.peek());
-        if(scanner.peek() == '\n'){
-            scanner.get();
-        }
+
 
         scanner.skipWhiteSpaces();
-        //scanner.skipComment();
+
+        if(scanner.peek() == '\n' || scanner.peek() == '\r'){
+            scanner.get();
+            currentLine++;
+            return new EOLToken("EOL");
+        }
 
         if (!scanner.hasMoreCharacters()) {
             return null; // End of file
@@ -58,10 +62,10 @@ public class Lexer {
             return recognizeQuote();
         }
 
-        // Unrecognized token, consume and return an error or handle it accordingly
-        scanner.get();
 
-        return null; // Return null or a custom error token if needed
+        // Unrecognized token -> Throw an error 
+
+        throw new RuntimeException("Unrecognized token: " + currentChar + " at line " + currentLine);
     }
 
     // Helper method to recognize numbers
@@ -98,12 +102,16 @@ public class Lexer {
                 while(scanner.peek() != '\n'){
                     scanner.get();
                 }
+                //Consume the newline
+                scanner.get();
+                currentLine++;
                 return new CommentToken("REM");                    
             }
             return new ReservedWordToken(lexeme);
         }
 
         // Otherwise, it's an identifier (ID)
+
         return new IdToken(lexeme, null); // Pass null for the symbol table entry for now
     }
 
@@ -113,14 +121,19 @@ public class Lexer {
         scanner.get(); // Consume the quote
         char currentChar = scanner.peek();
 
-        // Continue reading until the closing quote or new line (we don't verify the closing quote for now)
-        while (currentChar != '"' && currentChar != '\n') {
+        // Continue reading until the closing quote 
+        while (currentChar != '"') {
             quoteBuilder.append(currentChar);
             scanner.get(); // Consume the character
             currentChar = scanner.peek();
+            //Error if no closing quote at the end of the line
+            if(currentChar == '\n'){
+                throw new RuntimeException("No closing quote at line " + currentLine);
+            }
         }
-        
-        scanner.get(); // Consume the quote or new line
+        scanner.get(); // Consume the quote
+        //System.out.println(scanner.peek() == '\n');
+
 
         return new StringToken(quoteBuilder.toString());
 
@@ -168,5 +181,10 @@ public class Lexer {
                lexeme.equals("PRINT") || lexeme.equals("LET") || lexeme.equals("INPUT") || 
                lexeme.equals("GOSUB") || lexeme.equals("RETURN") || lexeme.equals("END") || 
                lexeme.equals("REM");
+    }
+
+    // Getter for the current line
+    public int getCurrentLine() {
+        return currentLine;
     }
 }
