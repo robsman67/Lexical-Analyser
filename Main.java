@@ -10,14 +10,7 @@ import java.io.FileReader;
 
 public class Main {
     public static void main(String[] args) {
-        /*if (args.length == 0) {
-            System.out.println("Please provide a .tb input file.");
-            return;
-        }
-
-        String inputFile = args[0];
-*/
-
+        // Input file
         String inputFile = "Test/test1.tb";
         try {
             // Create the Scanner for the .tb input file
@@ -38,7 +31,7 @@ public class Main {
                 //Don't print REM tokens
                 if(!token.getTokenType().equals("REM")){
                     if(token.getTokenType().equals("ID")){
-                        symbolTable.addEntry(token, lexer.getCurrentLine());
+                        symbolTable.addEntry(token, scanner.getCurrentLine(), scanner.getCurrentColumn());
                     }
                     //Print line by line
                     if(token.getTokenType().equals("EOL")){
