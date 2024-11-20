@@ -13,7 +13,7 @@ import java.io.Reader;
 
 public class Scanner {
     // Instance variables
-    private Reader reader;
+    private final Reader reader;
     private int currentChar;
     private int currentLine = 1;
     private int currentColumn = 0;

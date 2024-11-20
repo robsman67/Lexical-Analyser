@@ -5,13 +5,12 @@
 package SymbolTable;
 
 import Token.Token;
-import Token.ReservedWordToken;
 
 public class SymbolTableEntry {
-    private Token token;
-    private int firstOccurenceLine;
-    private int firstOccurenceColumn;
-    private boolean reservedToken;
+    private final Token token;
+    private final  int firstOccurenceLine;
+    private final int firstOccurenceColumn;
+    private final boolean reservedToken;
 
     // Constructor for non-reserved tokens
     /**
